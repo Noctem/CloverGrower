@@ -1,6 +1,10 @@
 #!/bin/sh
 myV="4.9a"
 gccVersToUse="4.7.2" # failsafe check
+
+# Reset locales (important when grepping strings from output commands)
+export LC_ALL=C
+
 function echob() {
   echo "`tput bold`$1`tput sgr0`"
 }
