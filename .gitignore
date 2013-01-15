@@ -1,8 +1,12 @@
+# Files to always ignore
 .DS_Store
-
 *.[oa]
 *~
 
+# Automatically generated files
+Files/.CloverTools
+Files/.gccVersion
+
+# Directories that we don't need to track
 builtPKG/
 src/
-Files/.CloverTools
