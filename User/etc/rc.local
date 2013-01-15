@@ -1,27 +1,74 @@
 #!/bin/bash
-theRoot=`diskutil info / | grep 'Part of Whole:' | awk '{print $4}'`
-theBootFlag=`nvram -p  | grep 'boot-args'` # flag to mount EFI
-if [ -f /boot.log ]; then
-	mv /boot.log /boot-log_old
-fi	
-ioreg -lw0 -pIODeviceTree | grep boot-log > /log.txt
-logdump=$(cat /log.txt)
+
+# rc.local startup script
+# Edited - apianti 2013-01-13
+
+# Manage boot log
+theBootLog=boot.log
+theLogPath=system.log
+theLineCount=3000
+theTempPath=temp.log
+
+# If the line count > 0 trim the previous log to line count
+if test $theLineCount -gt 0 ; then
+	if [ -f $theLogPath ]; then
+		tail -n $theLineCount $theLogPath > $theTempPath
+		cat ${theTempPath} > ${theLogPath}
+	fi
+fi
+
+# Print the current timestamp
+echo "-------------------------------" > $theBootLog
+date "+DATE: %Y-%m-%d TIME: %H:%M:%S" >> $theBootLog
+echo "-------------------------------" >> $theBootLog
+
+# Get the current boot log
+logdump=$(ioreg -lw0 -pIODeviceTree | grep boot-log)
 modified1=${logdump#*'boot-log'}
 modified2=${modified1#*'<'}
 modified3=${modified2%%'>'*}
-echo $modified3 > /boot-log.txt
-date "+DATE: %Y-%m-%d TIME: %H:%M:%S%n" > /boot.log
-xxd -r -p /boot-log.txt >> /boot.log
-rm /log.txt
-rm /boot-log.txt
-if [ "$theBootFlag" != "" ]; then
-	for theMountFlag in $theBootFlag;do # need to do this if
-		if [ "$theMountFlag" == "MountEFI=Yes" ]; then
-			echo "AutoMount ${theRoot}s1  Enabled" 
-			[ ! -d /Volumes/EFI ] && mkdir /Volumes/EFI && sudo mount -t msdos /dev/"${theRoot}"s1 /Volumes/EFI	
-			exit
-		fi		
-	done
-fi	
-echo "AutoMount ${theRoot}s1  Disabled" 
+echo "$modified3" > ${theTempPath}
+xxd -r -p ${theTempPath} >> ${theBootLog}
+rm ${theTempPath}
+cat ${theBootLog} >> ${theLogPath}
 
+# Parse boot flags
+theBootFlags=$(nvram -p  | grep "MountEFI=Yes")
+theRoot=
+
+for theBootFlag in $theBootFlags; do
+	theBootFlag=$(echo $theBootFlag | tr '[:upper:]' '[:lower:]')
+	
+	# Parse the MountEFI= parameter
+	if [ "x${theBootFlag:0:9}" == "xmountefi=" ]; then
+		if [ "x${theBootFlag:9}" == x"yes" ]; then
+			# Set the EFI partition of the root volume
+			theRoot=$(diskutil info / | grep 'Part of Whole:' | awk '{print $4}')
+		else
+			# Set EFI partition disk manually
+			theRootTest=$(diskutil list | grep ${theBootFlag:9})
+			if [ "x$theRootTest" != "x" ]; then
+				theRoot=${theBootFlag:9}
+			fi
+		fi
+	fi
+done
+
+# Check for EFI mounting
+if [ "x$theRoot" == "x" ]; then
+	echo "Not auto mounting EFI partition"
+	exit
+fi
+
+# Check the EFI mount point exists or create it
+if [ ! -d /Volumes/EFI ]; then
+	mkdir /Volumes/EFI
+	if [ ! -d /Volumes/EFI ]; then
+		echo "Could not create /Volumes/EFI to mount ${theRoot}s1"
+		exit
+	fi
+fi
+
+# Mount the EFI volume
+mount -t msdos /dev/"${theRoot}"s1 /Volumes/EFI && exit
+echo "Failed to mount ${theRoot}s1 at /Volumes/EFI"
