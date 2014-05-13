@@ -19,14 +19,14 @@ export archBit='x86_64'
 theRevision=
 if [[ "$1" == ""  && "$myArch" == "x86_64" ]]; then # if NO parameter build 32&64
 	target="X64/IA32"
-else 	
+else
 	target="X64"
 fi
 if [ "$myArch" == "i386" ] || [ "$1" == "32" ] ; then # for 32bit cpu
 	target="IA32"
 	export archBit='i686'
 fi
-[ "$1" == "-r" ] &&	[ "$2" != "" ] && theRevision="$2"		
+[ "$1" == "-r" ] && [ "$2" != "" ] && theRevision="$2"		
 # don't use -e
 set -u
 user=$(id -un)
@@ -41,13 +41,13 @@ fi
 theSystem=$(uname -r)
 theSystem="${theSystem:0:2}"
 case "${theSystem}" in
-    [0-8]) rootSystem="unsupported" ;;
-    9) export rootSystem="Leopard" ;;
-    10) export rootSystem="Snow Leopard" ;;
-    11) export rootSystem="Lion" ;;
-    12)	export rootSystem="Mountain Lion" ;;
-    13)	export rootSystem="Mavericks" ;;
-    [14-20]) rootSystem="Unknown" ;;
+	[0-8]) rootSystem="unsupported" ;;
+	9) export rootSystem="Leopard" ;;
+	10) export rootSystem="Snow Leopard" ;;
+	11) export rootSystem="Lion" ;;
+	12) export rootSystem="Mountain Lion" ;;
+	13) export rootSystem="Mavericks" ;;
+	[14-20]) rootSystem="Unknown" ;;
 esac
 
 # XCode check
@@ -146,14 +146,14 @@ if [[ ! -L "$theShortcut"/CloverGrower.command || $(readlink "$theShortcut"/Clov
 		echob "    Type 's' OR any key"
 		read theSelect
 		case "$theSelect" in
-                s|S)
-                     theLink="$theShortcut"/CloverGrower.command
-                     theText="shortcut"
-                     sudoit=
-                     ;;
-                *)
-                sudoit="sudo"
-        esac
+				s|S)
+					 theLink="$theShortcut"/CloverGrower.command
+					 theText="shortcut"
+					 sudoit=
+					 ;;
+				*)
+				sudoit="sudo"
+		esac
 		printf "Will create link %s to %s\n" $(echob "$theLink") $(echob "CloverGrower.command")
 		if [ "$theLink" == /usr/local/bin/clover ]; then
 			echob "You can THEN 'run' CloverGrower.command by typing 'clover' ;)"
@@ -162,7 +162,7 @@ if [[ ! -L "$theShortcut"/CloverGrower.command || $(readlink "$theShortcut"/Clov
 			fi
 		else
 			echob "You can THEN run by double clicking CloverGrower.command on Desktop"
-		fi		
+		fi
 		command='$sudoit ln -sf "${CLOVER_GROWER_SCRIPT}" "$theLink" && $sudoit chown $theBoss "$theLink"'
 		echob "$command" ; eval "$command"
 	fi
@@ -188,7 +188,7 @@ if [[ ! -d "$edk2DIR" && "$workSpace" -lt "$workSpaceNeeded" ]]; then
 	else
 		echob "You have $workSpacePKGDIR MB in builtPKGDIR"
 		exit 1
-	fi			
+	fi
 elif [[ "$workSpace" -lt "$workSpaceMin" ]]; then
 	echob "Getting low on free space"
 fi
@@ -198,17 +198,17 @@ workSpaceAvail="$workSpace"
 # simple spinner
 function spinner()
 {
-    local pid=$1
-    #local delay=0.25
-    local spinstr='|/-\'
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        #sleep $delay
-        printf "\b\b\b\b\b\b"
-    done
-    printf "    \b\b\b\b"
+	local pid=$1
+	#local delay=0.25
+	local spinstr='|/-\'
+	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+		local temp=${spinstr#?}
+		printf " [%c]  " "$spinstr"
+		local spinstr=$temp${spinstr%"$temp"}
+		#sleep $delay
+		printf "\b\b\b\b\b\b"
+	done
+	printf "    \b\b\b\b"
 }
 		
 function notify(){
@@ -219,8 +219,8 @@ if [ -f "${notifier}" ] && [ "${theSystem}" -ge "12" ]; then
 	"${notifier}" -message "$1" -title "$Title"
 else
 	echob "$1"
-fi		
-}	
+fi
+}
 
 function checkAuthor(){
 	if [ "$1" == "Initial" ] || [ "$2" == "this" ]; then
@@ -229,7 +229,7 @@ function checkAuthor(){
 		theFlag="-r $2"
 	fi
 	cloverInfo=
-	while [ "$cloverInfo" == "" ]; do	
+	while [ "$cloverInfo" == "" ]; do
 		cloverInfo=$(svn info ${theFlag} svn://svn.code.sf.net/p/cloverefiboot/code)
 		theAuthor=$(echo "$cloverInfo" | grep 'Last Changed Author:')
 		sleep 1
@@ -247,8 +247,8 @@ theAuthor=$(echo "$cloverInfo" | grep 'Last Changed Author:')
 if [ "$1" == "Initial" ]; then
 	echo "${CloverREV}" > "${CloverDIR}"/Lvers.txt	# make initial revision txt file
 else
-	newCloverRev="${CloverREV}"	
-fi	
+	newCloverRev="${CloverREV}"
+fi
 #rEFIt
 refitstats=`svn info svn://svn.code.sf.net/p/cloverefiboot/code/rEFIt_UEFI | grep 'Last Changed Rev:'`
 export rEFItREV="${refitstats:18:10}"
@@ -278,55 +278,55 @@ function getSOURCEFILE() {
 	[ "$1" == Clover ] && cd "${edk2DIR}" 
 	getREVISIONS${1} Initial this # flag to write initial revision
 	if [ ! -d "$1"/.svn ]; then
-      	echo -n "    Check out $1  "
+		echo -n "    Check out $1  "
 		(svn co "$2" "$1" >/dev/null) &
 	else
-    	if [ "$1" == "Clover" ] && [ -d "${CloverDIR}"/.svn ]; then
+		if [ "$1" == "Clover" ] && [ -d "${CloverDIR}"/.svn ]; then
 			theFlag="up --revision ${versionToBuild}"
 		else 
 			theFlag="up"
 		fi
-    	cd "$1"
-    	echo -n "    Auto Update $1  "
+		cd "$1"
+		echo -n "    Auto Update $1	 "
 		(svn $theFlag . >/dev/null) &
-    fi
+	fi
 	spinner $!
 	checkit "  SVN $1"
 }
 
 # sets up svn sources
 function getSOURCE() {
-    edk2Update="Yes"
-    # Don't update edk2 if no Clover updates
-    if [[  "${cloverUpdate}" == "Yes" ]]; then
-    	if [[ -d "${edk2DIR}"/.svn ]]; then # get svn revision
-    		getREVISIONSedk2 test
-    		Ledk2=`cat "${edk2DIR}"/Lvers.txt`
+	edk2Update="Yes"
+	# Don't update edk2 if no Clover updates
+	if [[  "${cloverUpdate}" == "Yes" ]]; then
+		if [[ -d "${edk2DIR}"/.svn ]]; then # get svn revision
+			getREVISIONSedk2 test
+			Ledk2=`cat "${edk2DIR}"/Lvers.txt`
 			if [[ "$edk2REV" == "$Ledk2" ]]; then
 				echob "edk2 svn revision = edk2 local revision ( $edk2REV )" # same return
 				edk2Update="No"
 			else
 				echob "edk2 local will be updated from $Ledk2 to $edk2REV" # updated
 			fi
-		fi		   	  	
-        # Get edk2 source
-        if [[ "$edk2Update" == "Yes" ]]; then
-        	#cd "${edk2DIR}"
-	    	getSOURCEFILE edk2 svn://svn.code.sf.net/p/edk2/code/trunk/edk2  # old repo "http://edk2.svn.sourceforge.net/svnroot/edk2/trunk/edk2"
-	    	
-	    	echo "$edk2REV" > "${edk2DIR}"/Lvers.txt # update the version
-	      fi	
+		fi
+		# Get edk2 source
+		if [[ "$edk2Update" == "Yes" ]]; then
+			#cd "${edk2DIR}"
+			getSOURCEFILE edk2 svn://svn.code.sf.net/p/edk2/code/trunk/edk2	 # old repo "http://edk2.svn.sourceforge.net/svnroot/edk2/trunk/edk2"
+
+			echo "$edk2REV" > "${edk2DIR}"/Lvers.txt # update the version
+		  fi
 	fi
 	cd "${edk2DIR}"
 	# Get Clover source
-    getSOURCEFILE Clover "svn://svn.code.sf.net/p/cloverefiboot/code/"
-    
-    GETTEXT_PREFIX=${GETTEXT_PREFIX:-"${HOME}"/src/opt/local}
+	getSOURCEFILE Clover "svn://svn.code.sf.net/p/cloverefiboot/code/"
+
+	GETTEXT_PREFIX=${GETTEXT_PREFIX:-"${HOME}"/src/opt/local}
 	# Check that the gettext utilities exists
 	if [[ ! -x "$GETTEXT_PREFIX/bin/msgmerge" ]]; then
 		echob "Need getttext for package builder, Fixing..."
-    	"${CloverDIR}"/buildgettext.sh
-  		checkit "buildtext.sh"
+		"${CloverDIR}"/buildgettext.sh
+		checkit "buildtext.sh"
 	fi
 
 }
@@ -358,48 +358,48 @@ function cleanRUN(){
 		#rm -rf "${buildDIR}"
 	done	
 }
-	
+
 # sets up 'new' sysmlinks for >=gcc47
 function MakeSymLinks() {
 # Function: SymLinks in CG_PREFIX location
 # Need this here to fix links if Files/.CloverTools gets removed
-    if [[ "$target" == "IA32" ]] || [[ "$myArch" == "i386" ]]; then
-    	DoLinks "ia32" "i686-clover-linux-gnu" # only for 32bit cpu
-    else	
-        DoLinks "x86_64"  "x86_64-clover-linux-gnu" # for 64bit CPU
-        DoLinks "i686" "i686-clover-linux-gnu" # ditto
-    fi    
+	if [[ "$target" == "IA32" ]] || [[ "$myArch" == "i386" ]]; then
+		DoLinks "ia32" "i686-clover-linux-gnu" # only for 32bit cpu
+	else
+		DoLinks "x86_64"  "x86_64-clover-linux-gnu" # for 64bit CPU
+		DoLinks "i686" "i686-clover-linux-gnu" # ditto
+	fi
 }
 
 #makes 'new' syslinks
 function DoLinks(){
-    ARCH="$1"
-    TARGETARCH="$2"
-    if [[ ! -d "${TOOLCHAIN}/${ARCH}" ]]; then
-        mkdir -p "${TOOLCHAIN}/${ARCH}"
-    fi
-    if [[ $(readlink "${TOOLCHAIN}/${ARCH}"-clover-linux-gnu/bin/gcc) != "${CG_PREFIX}"-clover-linux-gnu/bin/gcc ]]; then # need to do this
-        echo "  Fixing your GCC${mygccVers} ${ARCH} Symlinks"
-        for bin in gcc ar ld objcopy; do
-            ln -sf "${CG_PREFIX}"/bin/$TARGETARCH-$bin  "${TOOLCHAIN}/${ARCH}"/$bin
-        done
-        echo "  Finished: Fixing"
-        echo "  symlinks are in: ${TOOLCHAIN}/$ARCH"
-    fi
+	ARCH="$1"
+	TARGETARCH="$2"
+	if [[ ! -d "${TOOLCHAIN}/${ARCH}" ]]; then
+		mkdir -p "${TOOLCHAIN}/${ARCH}"
+	fi
+	if [[ $(readlink "${TOOLCHAIN}/${ARCH}"-clover-linux-gnu/bin/gcc) != "${CG_PREFIX}"-clover-linux-gnu/bin/gcc ]]; then # need to do this
+		echo "  Fixing your GCC${mygccVers} ${ARCH} Symlinks"
+		for bin in gcc ar ld objcopy; do
+			ln -sf "${CG_PREFIX}"/bin/$TARGETARCH-$bin	"${TOOLCHAIN}/${ARCH}"/$bin
+		done
+		echo "  Finished: Fixing"
+		echo "  symlinks are in: ${TOOLCHAIN}/$ARCH"
+	fi
 }
 
 # checks for gcc install and installs if NOT found
 function checkGCC(){
-    export mygccVers="${gccVers:0:1}${gccVers:2:1}" # needed for BUILD_TOOLS e.g GCC46
-    echob "Checking GCC$gccVers INSTALL status"
-    if [ -x "${CG_PREFIX}/${archBit}"-clover-linux-gnu/bin/gcc ]; then
-    	local lVers=$("${CG_PREFIX}/${archBit}"-clover-linux-gnu/bin/gcc -dumpversion)
-        export mygccVers="${lVers:0:1}${lVers:2:1}" # needed for BUILD_TOOLS e.g GCC46
-        echo "  gcc $lVers detected"
-        echo "  Fixing gcc…"
-        MakeSymLinks
-        return
-    fi
+	export mygccVers="${gccVers:0:1}${gccVers:2:1}" # needed for BUILD_TOOLS e.g GCC46
+	echob "Checking GCC$gccVers INSTALL status"
+	if [ -x "${CG_PREFIX}/${archBit}"-clover-linux-gnu/bin/gcc ]; then
+		local lVers=$("${CG_PREFIX}/${archBit}"-clover-linux-gnu/bin/gcc -dumpversion)
+		export mygccVers="${lVers:0:1}${lVers:2:1}" # needed for BUILD_TOOLS e.g GCC46
+		echo "  gcc $lVers detected"
+		echo "  Fixing gcc…"
+		MakeSymLinks
+		return
+	fi
 	echob "$archBit GCC$gccVers NOT installed";echo
 	echob "Press 'i' To install to ~/src/opt/local"
 	echob "OR"
@@ -408,14 +408,14 @@ function checkGCC(){
 	[[ "$choose" == "" ]] && echob "Good ${hours}" && exit 1
 	[ ! -d "${CG_PREFIX}"/src ] && mkdir -p "${CG_PREFIX}"/src
 	cd "${workDIR}"/Files
-	echo "  Download/install GCC$gccVers Compiler Tool"
-	echob "  To: ${CG_PREFIX}"
+	echo "	Download/install GCC$gccVers Compiler Tool"
+	echob "	 To: ${CG_PREFIX}"
 	sleep 2
-	echo "  Files/buildgcc -all ${CG_PREFIX} $gccVers"
-	echob "  Starting GCC$gccVers build process..." 
+	echo "	Files/buildgcc -all ${CG_PREFIX} $gccVers"
+	echob "	 Starting GCC$gccVers build process..." 
 	STARTM=$(date -u "+%s" 1>/dev/null )
 	date
-	("${filesDIR}"/buildgcc.sh "-all") # "${CG_PREFIX}" "$gccVers")  # build all to CG_PREFIX with gccVers
+	("${filesDIR}"/buildgcc.sh "-all") # "${CG_PREFIX}" "$gccVers")	 # build all to CG_PREFIX with gccVers
 	checkit "GCC$gccVers build process..."	
 }
 
@@ -438,7 +438,6 @@ function Main(){
 }
 
 autoBuild(){
-	
 	if [ "$built" == "No " ]; then
 		buildMess="*    Auto-Build Full Clover rEFIt_UEFI    *"
 		cleanMode=""
@@ -446,8 +445,8 @@ autoBuild(){
 		targetBitsMess="${targetBits}"
 		Main "${targetBits}"
 		built="Yes"
-	fi	
-}	
+	fi
+}
 
 # makes pkg if Built OR builds THEN makes pkg
 function makePKG(){
@@ -470,7 +469,7 @@ function makePKG(){
 	if [[ "${gRefitVers}" == "0" && "${gTheLoader}" != "Apple" ]] && [ "$gFWLoader" != "Ozmosis" ]; then 
 		echob "Booting with ${gTheLoader} UEFI, Clover is NOT currently Installed"
 	else
-			echob "${gCloverLoader}"
+		echob "${gCloverLoader}"
 	fi
 	if [ "$theRevision" == "" ]; then
 		echo
@@ -488,7 +487,7 @@ function makePKG(){
 				cloverUpdate="Yes"
 			fi
 			echob "*********Clover Build STATS***********"
-			echob "*      remote revision at ${CloverREV}       *" 
+			echob "*      remote revision at ${CloverREV}       *"
 			echob "*      local  revision at ${versionToBuild}       *"
 			if [ "$built" == "Yes" ]; then
 				echob "* Clover_v2k_r${versionToBuild}.pkg ALREADY Made!  *"
@@ -497,24 +496,24 @@ function makePKG(){
 					echob "Updated package (${versionToBuild}) NOT installed!!"
 					echob "Opening ${versionToBuild} Folder"
 					open "${builtPKGDIR}"/"${versionToBuild}"
- 				fi	
+				fi
 				return
 			fi
 			echob "*      Package Built   =  $built        *"
 			echob "**************************************"
 		fi
-	fi	
+	fi
 	if [[ -f "${edk2DIR}"/Basetools/Source/C/bin/VfrCompile ]]; then
 		if [[ -d "${CloverDIR}" && -d "${rEFItDIR}" && "$theRevision" == "" ]]; then
 			cloverLVers=$(getSvnRevision "${CloverDIR}")
 			if [[ "$theAuthor" == "Last Changed Author: pootle-clover" ]]; then
-           		echob "*********Clover Build STATS***********"
+				echob "*********Clover Build STATS***********"
 				echob "*      local  revision at ${cloverLVers}       *"
 				echob "*      remote revision at ${CloverREV}       *"
 				echob "*      Package Built   =  $built        *"
 				echob "**************************************"
 				if [[ "${theBuiltVersion}" != "" ]]; then
-					ToBuildVersion=$CloverREV
+					ToBuildVersion="$CloverREV"
 					echob "Last successful build was ${theBuiltVersion}"
 					while [ "$theAuthor" == "Last Changed Author: pootle-clover"  ]
 					do
@@ -525,87 +524,87 @@ function makePKG(){
 						getREVISIONSClover "test" ${ToBuildVersion}
 						echob "Found ${newCloverRev} $theAuthor"
 					done 
-            		echob "Continuing using r${newCloverRev}"
-            		versionToBuild=${newCloverRev}
-            		cloverLVers=${newCloverRev}
-            		newCloverRev="" #
-            		cloverUpdate="Yes"
-            	fi	
-            fi	
+					echob "Continuing using r${newCloverRev}"
+					versionToBuild=${newCloverRev}
+					cloverLVers=${newCloverRev}
+					newCloverRev=""
+					cloverUpdate="Yes"
+				fi
+			fi	
 			if [[ "${cloverLVers}" != "${CloverREV}" ]]; then
-            	cd "${CloverDIR}"
-           		echo "$CloverREV" > Lvers.txt # update the version
-           		notify "Clover Update ( $CloverREV ) Detected !"
-           		cloverUpdate="Yes"
-           		echob "*********Clover Build STATS***********"
+				cd "${CloverDIR}"
+				echo "$CloverREV" > Lvers.txt # update the version
+				notify "Clover Update ( $CloverREV ) Detected !"
+				cloverUpdate="Yes"
+				echob "*********Clover Build STATS***********"
 				echob "*      local  revision at ${cloverLVers}       *"
 				echob "*      remote revision at ${CloverREV}       *"
 				echob "*      Package Built   =  $built        *"
 				echob "**************************************"
 				echob "svn changes for $CloverREV"
-   				changesSVN=$(svn log -v -r "$CloverREV")
-   				echob "$changesSVN"
-       			tput bel
-       			cd ..
-       		elif [[ ! -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ]] && [[ "${versionToBuild}" != "${cloverLVers}" ]]; then
-       			echob "Clover_v2k_r${versionToBuild}.pkg NOT built"
-       			cloverUpdate="Yes"
-    		elif [[ -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ]]; then
-       			echob "Clover_v2k_r${versionToBuild}.pkg built"
-       			return 0
-       		else
-            	echob "No Clover Update found."
-            	echob "Current revision: ${cloverLVers}"
-            fi
-    	else
-    		[ -d "${buildDIR}" ] && rm -rf "${buildDIR}"
-    	fi		
-    else 
-	    cloverUpdate="Yes"
-    fi
-    if [[ ! -e "${edk2DIR}"/edksetup.sh ]]; then
-    	getREVISIONSedk2 "test"
-    	if [[ -d "${edk2DIR}"/.svn ]]; then
-    		echob "svn edk2 revision: ${edk2REV}"
-    		echob "error!!! RETRY!!"
-	    	cd "${edk2DIR}"
-	    	svn cleanup
-	    	
-	    	echo -n "    Auto Fixup edk2  "
-	    	(svn up --non-interactive --trust-server-cert >/dev/null) &
-	    	spinner $!
+				changesSVN=$(svn log -v -r "$CloverREV")
+				echob "$changesSVN"
+				tput bel
+				cd ..
+			elif [[ ! -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ]] && [[ "${versionToBuild}" != "${cloverLVers}" ]]; then
+				echob "Clover_v2k_r${versionToBuild}.pkg NOT built"
+				cloverUpdate="Yes"
+			elif [[ -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ]]; then
+				echob "Clover_v2k_r${versionToBuild}.pkg built"
+				return 0
+			else
+				echob "No Clover Update found."
+				echob "Current revision: ${cloverLVers}"
+			fi
+		else
+			[ -d "${buildDIR}" ] && rm -rf "${buildDIR}"
+		fi
+	else 
+		cloverUpdate="Yes"
+	fi
+	if [[ ! -e "${edk2DIR}"/edksetup.sh ]]; then
+		getREVISIONSedk2 "test"
+		if [[ -d "${edk2DIR}"/.svn ]]; then
+			echob "svn edk2 revision: ${edk2REV}"
+			echob "error!!! RETRY!!"
+			cd "${edk2DIR}"
+			svn cleanup
+			
+			echo -n "    Auto Fixup edk2  "
+			(svn up --non-interactive --trust-server-cert >/dev/null) &
+			spinner $!
 			checkit "edk2  "
-		fi		
-	fi	
-	if [ "$theRevision" != "" ]; then	
+		fi
+	fi
+	if [ "$theRevision" != "" ]; then
 		versionToBuild="${theRevision}"
 		cloverUpdate="Yes"
 	else
-   	 	versionToBuild="${CloverREV}"
+		versionToBuild="${CloverREV}"
 	fi
 	if [[ ! -d "${edk2DIR}"/.svn || ! -d "${rEFItDIR}" || "$cloverUpdate" == "Yes" ]]; then # only get source if NOT there or UPDATED.
-    	echob "Getting SVN Source Files, Hang ten, OR TWENTY"
-    	getSOURCE
-   	elif [ "$theRevision" == "" ]; then
-   		versionToBuild="${cloverLVers}"
-   	fi 
-   	if [[ ! -f "${CloverDIR}"/HFSPlus/X64/HFSPlus.efi ]]; then  # only needs to be done ONCE.
-        echob "    Copy Files/HFSPlus Clover/HFSPlus"
-    	cp -R "${filesDIR}/HFSPlus/" "${CloverDIR}/HFSPlus/"
-    fi
-   	# Remove old edk2 config files
-   	rm -f "${edk2DIR}"/Conf/{BuildEnv.sh,build_rule.txt,target.txt,tools_def.txt}
+		echob "Getting SVN Source Files, Hang ten, OR TWENTY"
+		getSOURCE
+	elif [ "$theRevision" == "" ]; then
+		versionToBuild="${cloverLVers}"
+	fi
+	if [[ ! -f "${CloverDIR}"/HFSPlus/X64/HFSPlus.efi ]]; then	# only needs to be done ONCE.
+		echob "    Copy Files/HFSPlus Clover/HFSPlus"
+		cp -R "${filesDIR}/HFSPlus/" "${CloverDIR}/HFSPlus/"
+	fi
+	# Remove old edk2 config files
+	rm -f "${edk2DIR}"/Conf/{BuildEnv.sh,build_rule.txt,target.txt,tools_def.txt}
 	# Create new default edk2 files in edk2/Conf
-   	cd "${edk2DIR}"
-   	./edksetup.sh >/dev/null
-  	 #get configuration files from Clover
-    cp -R "${CloverDIR}/Patches_for_EDK2/tools_def.txt"  "${edk2DIR}"/Conf/
-    cp -R "${CloverDIR}/Patches_for_EDK2/build_rule.txt" "${edk2DIR}"/Conf/
-    echob "    Ready to build Clover $versionToBuild, Using Gcc $gccVers"
-    sleep 1
-    autoBuild "$1"
-    tput bel
-    echo "$CloverREV" > "${CloverDIR}"/Lvers.txt
+	cd "${edk2DIR}"
+	./edksetup.sh >/dev/null
+	 #get configuration files from Clover
+	cp -R "${CloverDIR}/Patches_for_EDK2/tools_def.txt"	 "${edk2DIR}"/Conf/
+	cp -R "${CloverDIR}/Patches_for_EDK2/build_rule.txt" "${edk2DIR}"/Conf/
+	echob "	   Ready to build Clover $versionToBuild, Using Gcc $gccVers"
+	sleep 1
+	autoBuild "$1"
+	tput bel
+	echo "$CloverREV" > "${CloverDIR}"/Lvers.txt
 	if [ ! -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ]; then # make pkg if not there
 		cd "${CloverDIR}"/CloverPackage
 		if [[ "$target" != "IA32" ]]; then
@@ -614,7 +613,7 @@ function makePKG(){
 			[[ -d "${CloverDIR}"/CloverPackage/sym ]] && rm -rf "${CloverDIR}"/CloverPackage/sym
 			echob "cd to src/edk2/Clover/CloverPackage and run ./makepkg."
 			./makepkg "No"
-			
+
 			if [ ! -f "${CloverDIR}/CloverPackage/sym/Clover_v2k_r${versionToBuild}".pkg ]; then 
 				echob "Package ${versionToBuild} NOT BUILT!!!, probably svn error :("
 				echob "REMOVE Clover folder from src/edk2 and re-run CloverGrower V$myV :)"
@@ -622,10 +621,10 @@ function makePKG(){
 			else
 				echob "Clover_v2k_r${versionToBuild}.pkg	successfully built"
 			fi
-		fi	
+		fi
 		echob "run ./makeiso"
 		./makeiso "No"
-		
+
 		if [ "$flagTime" == "Yes" ]; then
 			STOPBM=$(date -u "+%s")
 			RUNTIMEMB=$(expr $STOPBM - $STARTM)
@@ -642,8 +641,8 @@ function makePKG(){
 				TTIMEM=$(printf "%dm%ds\n" $((RUNTIMEM/60%60)) $((RUNTIMEM%60)))
 			else
 				TTIMEM=$(printf "%ds\n" $((RUNTIMEM)))
-			fi	
-			echob "Clover revision $CloverREV Compile/MKPkg process took $TTIMEM to complete" 
+			fi
+			echob "Clover revision $CloverREV Compile/MKPkg process took $TTIMEM to complete"
 		fi
 		[[ ! -d "${builtPKGDIR}/${versionToBuild}" ]] && echob "mkdir -p buildPKG/${versionToBuild}." && mkdir -p "${builtPKGDIR}"/"${versionToBuild}"
 		echob "cp edk2/Clover/CloverPackage/sym/ builtPKG/${versionToBuild}."
@@ -659,27 +658,26 @@ function makePKG(){
 		open "${builtPKGDIR}"/"${versionToBuild}/Clover_v2k_r${versionToBuild}.pkg"
 		tput bel
 	fi
-	
 }
 
 getInstalledLoader(){
 	local efi=`ioreg -l -p IODeviceTree | grep firmware-abi | awk '{print $5}'`
-    local efiBITS="${efi:5:2}"
-    if [ "${efiBITS}" == "32" ]; then
-    	efiBITS="IA32"
-    elif [ "${efiBITS}" == "64" ]; then
-       	efiBITS="X64"
-    else
-    	efiBITS="WhoKnows"   	
-    fi
-    
-    # Discover current bootloader and associated version.
-    gRefitVers="0"
-    gTheLoader=$(ioreg -l -pIODeviceTree | grep firmware-vendor | awk '{print $5}' | sed 's/_/ /g' | tr -d "<\">" | xxd -r -p)
-    gBootLog=$(ioreg -lw0 -pIODeviceTree | grep boot-log | tr -d \
-            "    |       "boot-log" = <\">" | LANG=C sed -e 's/.*72454649742072657620//' -e 's/206f6e20.*//' | xxd -r -p | sed 's/:/ /g')
-            
-    if [[ "$gTheLoader" == "Apple" ]]; then
+	local efiBITS="${efi:5:2}"
+	if [ "${efiBITS}" == "32" ]; then
+		efiBITS="IA32"
+	elif [ "${efiBITS}" == "64" ]; then
+		efiBITS="X64"
+	else
+		efiBITS="WhoKnows"
+	fi
+	
+	# Discover current bootloader and associated version.
+	gRefitVers="0"
+	gTheLoader=$(ioreg -l -pIODeviceTree | grep firmware-vendor | awk '{print $5}' | sed 's/_/ /g' | tr -d "<\">" | xxd -r -p)
+	gBootLog=$(ioreg -lw0 -pIODeviceTree | grep boot-log | tr -d \
+			"    |       "boot-log" = <\">" | LANG=C sed -e 's/.*72454649742072657620//' -e 's/206f6e20.*//' | xxd -r -p | sed 's/:/ /g')
+
+	if [[ "$gTheLoader" == "Apple" ]]; then
 		 gCloverLoader="Booting with Apple EFI ${efiBITS}"
 		 gRefitVers="1"
 		 return 0
@@ -691,22 +689,22 @@ getInstalledLoader(){
 		gFWVers=$(echo $gBootLog | awk '{print $6}')
 		gCloverLoader="Booting with $gFWLoader r$gFWVers EFI :) on $gTheLoader"
 	elif [[ "$gTheLoader" != "" ]]; then
-    	gRefitVers=$(ioreg -lw0 -pIODeviceTree | grep boot-log | tr -d \
-            "    |       "boot-log" = <\">" | LANG=C sed -e 's/.*72454649742072657620//' -e 's/206f6e20.*//' | xxd -r -p | sed 's/:/ /g')
-        gCloverLoader="Booting via Clover r${gRefitVers} BOOT${efiBITS}.efi with ${gTheLoader} UEFI"
-    elif [[ "$gTheLoader" == "" ]]; then
-        gTheLoader="Unknown_${efiBITS}"
+		gRefitVers=$(ioreg -lw0 -pIODeviceTree | grep boot-log | tr -d \
+			"    |       "boot-log" = <\">" | LANG=C sed -e 's/.*72454649742072657620//' -e 's/206f6e20.*//' | xxd -r -p | sed 's/:/ /g')
+		gCloverLoader="Booting via Clover r${gRefitVers} BOOT${efiBITS}.efi with ${gTheLoader} UEFI"
+	elif [[ "$gTheLoader" == "" ]]; then
+		gTheLoader="Unknown_${efiBITS}"
 	elif [[ "$gTheLoader" == "CLOVER" ]]; then
 		gTheLoader="Clover_${efiBITS}_${gRefitVers}"
 	else
 		local tmp=""
-        tmp=`ioreg -p IODeviceTree | grep RevoEFI`
-        if [ ! "$tmp" == "" ]; then 
-        	gTheLoader="RevoBoot_${efiBITS}"
-        else
-            gTheLoader="${gTheLoader}_${efiBITS}"
-        fi
-    fi  
+		tmp=`ioreg -p IODeviceTree | grep RevoEFI`
+		if [ ! "$tmp" == "" ]; then 
+			gTheLoader="RevoBoot_${efiBITS}"
+		else
+			gTheLoader="${gTheLoader}_${efiBITS}"
+		fi
+	fi
 }
 # setup gcc
 export CG_PREFIX="${TOOLCHAIN}"/cross 
