@@ -12,7 +12,7 @@ declare -r CMD=$([[ $0 == /* ]] && echo "$0" || echo "${PWD}/${0#./}")
 declare -r CLOVER_GROWER_SCRIPT=$(readlink "$CMD" || echo "$CMD")
 declare -r CLOVER_GROWER_DIR="${CLOVER_GROWER_SCRIPT%/*}"
 theShortcut=$(echo ~/Desktop)
-# Source librarie
+# Source library
 source "${CLOVER_GROWER_DIR}"/CloverGrower.lib
 myArch=$(uname -m)
 export archBit='x86_64'
