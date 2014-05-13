@@ -11,10 +11,10 @@ declare -r CMD=$([[ $0 == /* ]] && echo "$0" || echo "${PWD}/${0#./}")
 # Retrieve full path of CloverGrower
 declare -r CLOVER_GROWER_SCRIPT=$(readlink "$CMD" || echo "$CMD")
 declare -r CLOVER_GROWER_DIR="${CLOVER_GROWER_SCRIPT%/*}"
-theShortcut=`echo ~/Desktop`
+theShortcut=$(echo ~/Desktop)
 # Source librarie
 source "${CLOVER_GROWER_DIR}"/CloverGrower.lib
-myArch=`uname -m`
+myArch=$(uname -m)
 export archBit='x86_64'
 theRevision=
 if [[ "$1" == ""  && "$myArch" == "x86_64" ]]; then # if NO parameter build 32&64
@@ -74,7 +74,7 @@ if [ ! -f /usr/bin/gcc ]; then
 	fi		
 fi
 #check for space in Volume name
-CLOVER_GROWER_DIR_SPACE=`echo "$CLOVER_GROWER_DIR" | tr ' ' '_'`
+CLOVER_GROWER_DIR_SPACE=$(echo "$CLOVER_GROWER_DIR" | tr ' ' '_')
 if [[ "$CLOVER_GROWER_DIR_SPACE" != "$CLOVER_GROWER_DIR" ]]; then
 	echob "Space in Volume Name Detected!!"
 	echob "Recomend you change Volume Name"
@@ -250,7 +250,7 @@ else
 	newCloverRev="${CloverREV}"
 fi
 #rEFIt
-refitstats=`svn info svn://svn.code.sf.net/p/cloverefiboot/code/rEFIt_UEFI | grep 'Last Changed Rev:'`
+refitstats=$(svn info svn://svn.code.sf.net/p/cloverefiboot/code/rEFIt_UEFI | grep 'Last Changed Rev:')
 export rEFItREV="${refitstats:18:10}"
 
 }
@@ -301,7 +301,7 @@ function getSOURCE() {
 	if [[  "${cloverUpdate}" == "Yes" ]]; then
 		if [[ -d "${edk2DIR}"/.svn ]]; then # get svn revision
 			getREVISIONSedk2 test
-			Ledk2=`cat "${edk2DIR}"/Lvers.txt`
+			Ledk2=$(cat "${edk2DIR}"/Lvers.txt)
 			if [[ "$edk2REV" == "$Ledk2" ]]; then
 				echob "edk2 svn revision = edk2 local revision ( $edk2REV )" # same return
 				edk2Update="No"
@@ -478,7 +478,7 @@ function makePKG(){
 		echob "Target  : $target        Available Space : ${workSpaceAvail} MB"
 		echob "Compiler: GCC $gccVers       builtPKGDIR     : ${workSpacePKGDIR}"
 		echob "User: $user running '$(basename $CMD)' on OS X '$rootSystem' :)"
-		[[ -d "${builtPKGDIR}" ]] && theBuiltVersion=`ls -t "${builtPKGDIR}"` && [[ $theBuiltVersion != "" ]] && theBuiltVersion="${theBuiltVersion:0:4}"
+		[[ -d "${builtPKGDIR}" ]] && theBuiltVersion=$(ls -t "${builtPKGDIR}") && [[ $theBuiltVersion != "" ]] && theBuiltVersion="${theBuiltVersion:0:4}"
 		if [[ -f "${builtPKGDIR}/${versionToBuild}/Clover_v2k_r${versionToBuild}".pkg ||  -d "${builtPKGDIR}/${versionToBuild}/CloverCD" ]] && [ -d "$	{CloverDIR}" ]; then # don't build IF pkg already here
 			if [ "${theBuiltVersion}" == "${versionToBuild}" ]; then
 				built="Yes"
@@ -661,7 +661,7 @@ function makePKG(){
 }
 
 getInstalledLoader(){
-	local efi=`ioreg -l -p IODeviceTree | grep firmware-abi | awk '{print $5}'`
+	local efi=$(ioreg -l -p IODeviceTree | grep firmware-abi | awk '{print $5}')
 	local efiBITS="${efi:5:2}"
 	if [ "${efiBITS}" == "32" ]; then
 		efiBITS="IA32"
@@ -698,7 +698,7 @@ getInstalledLoader(){
 		gTheLoader="Clover_${efiBITS}_${gRefitVers}"
 	else
 		local tmp=""
-		tmp=`ioreg -p IODeviceTree | grep RevoEFI`
+		tmp=$(ioreg -p IODeviceTree | grep RevoEFI)
 		if [ ! "$tmp" == "" ]; then 
 			gTheLoader="RevoBoot_${efiBITS}"
 		else
@@ -709,7 +709,7 @@ getInstalledLoader(){
 # setup gcc
 export CG_PREFIX="${TOOLCHAIN}"/cross 
 if [ ! -x "${CG_PREFIX}/${archBit}"-clover-linux-gnu/bin/gcc ]; then
-		checkGCC
+	checkGCC
 fi
 getInstalledLoader # check what user is Booting with ;)
 export mygccVers="${gccVers:0:1}${gccVers:2:1}" # needed for BUILD_TOOLS e.g >GCC47 
