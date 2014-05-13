@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 myV="6.16"
 gccVers="4.8.2" 
 # use this
