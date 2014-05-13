@@ -6,7 +6,14 @@
 # Automatically generated files
 Files/.CloverTools
 Files/.gccVersion
+Files/buildgcc2.sh
 
 # Directories that we don't need to track
 builtPKG/
 src/
+edk2/
+Toolchain/
+EFI/
+Clover_ovmf-qemu/
+qemu/
+GCC48.rb
